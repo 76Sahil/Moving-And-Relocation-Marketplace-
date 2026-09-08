@@ -1,56 +1,93 @@
 package com.movingmarketplace.service;
 
+import com.movingmarketplace.dto.InventoryItemRequest;
+import com.movingmarketplace.dto.InventoryItemResponse;
 import com.movingmarketplace.entity.InventoryItem;
 import com.movingmarketplace.repository.InventoryItemRepository;
 import org.springframework.stereotype.Service;
+import com.movingmarketplace.exception.InventoryItemNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
-@Service                            //This class contains application/business logic and should be managed by Spring
+@Service
 public class InventoryItemService {
 
     private final InventoryItemRepository inventoryItemRepository;
 
-    public InventoryItemService(InventoryItemRepository inventoryItemRepository) // constructor injection
-    {
+    public InventoryItemService(InventoryItemRepository inventoryItemRepository) {
         this.inventoryItemRepository = inventoryItemRepository;
     }
 
-    //addItem()
-    public InventoryItem addItem(InventoryItem item) {
-        return inventoryItemRepository.save(item);
+    public InventoryItemResponse addItem(InventoryItemRequest request) {
+
+        InventoryItem item = new InventoryItem();
+
+        item.setItemName(request.getItemName());
+        item.setQuantity(request.getQuantity());
+        item.setDescription(request.getDescription());
+        item.setFragile(request.getFragile());
+
+        InventoryItem savedItem = inventoryItemRepository.save(item);
+
+        return mapToResponse(savedItem);
     }
 
-    //getAllItems()
-    public List<InventoryItem> getAllItems() {
-        return inventoryItemRepository.findAll();
+    public List<InventoryItemResponse> getAllItems() {
+
+        return inventoryItemRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
-    //getItemById()
-    public Optional<InventoryItem> getItemById(Long id) {
-        return inventoryItemRepository.findById(id);
+    public InventoryItemResponse getItemById(Long id) {
+
+        InventoryItem item = inventoryItemRepository.findById(id)
+                .orElseThrow(() ->
+                        new InventoryItemNotFoundException(
+                                "Inventory item not found with id: " + id));
+
+        return mapToResponse(item);
     }
 
-    //updateItem()
-    public InventoryItem updateItem(Long id, InventoryItem updatedItem) {
+    public InventoryItemResponse updateItem(
+            Long id,
+            InventoryItemRequest request) {
 
         InventoryItem existingItem = inventoryItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Inventory item not found"));
+                .orElseThrow(() ->
+                        new InventoryItemNotFoundException(
+                                "Inventory item not found with id: " + id));
 
-        existingItem.setItemName(updatedItem.getItemName());
-        existingItem.setQuantity(updatedItem.getQuantity());
-        existingItem.setDescription(updatedItem.getDescription());
-        existingItem.setFragile(updatedItem.getFragile());
+        existingItem.setItemName(request.getItemName());
+        existingItem.setQuantity(request.getQuantity());
+        existingItem.setDescription(request.getDescription());
+        existingItem.setFragile(request.getFragile());
 
-        return inventoryItemRepository.save(existingItem);
+        InventoryItem updatedItem =
+                inventoryItemRepository.save(existingItem);
+
+        return mapToResponse(updatedItem);
     }
 
     public void deleteItem(Long id) {
+
         if (!inventoryItemRepository.existsById(id)) {
-            throw new RuntimeException("Inventory item not found");
+            throw new InventoryItemNotFoundException(
+                    "Inventory item not found with id: " + id);
         }
 
         inventoryItemRepository.deleteById(id);
+    }
+
+    private InventoryItemResponse mapToResponse(InventoryItem item) {
+
+        return new InventoryItemResponse(
+                item.getId(),
+                item.getItemName(),
+                item.getQuantity(),
+                item.getDescription(),
+                item.getFragile()
+        );
     }
 }
