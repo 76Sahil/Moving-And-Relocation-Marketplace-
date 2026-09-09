@@ -14,7 +14,10 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/moving-requests/**").permitAll()
+                        .requestMatchers(
+                                "/api/moving-requests/**",
+                                "/api/schedules/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 );
 
