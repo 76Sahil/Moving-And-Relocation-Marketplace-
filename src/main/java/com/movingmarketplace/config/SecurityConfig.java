@@ -18,6 +18,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/moving-requests/**").permitAll()
                         .requestMatchers("/api/inventory/**").permitAll()
                         .requestMatchers("/api/claims/**").permitAll()
+                        .requestMatchers("/api/pricing/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
