@@ -17,6 +17,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/moving-requests/**").permitAll()
                         .requestMatchers("/api/inventory/**").permitAll()
+                        .requestMatchers("/api/claims/**").permitAll()
                         .requestMatchers("/api/pricing/**").permitAll()
                         .anyRequest().authenticated()
                 )
