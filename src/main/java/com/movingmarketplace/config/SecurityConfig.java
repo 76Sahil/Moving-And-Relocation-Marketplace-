@@ -20,6 +20,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/inventory/**").permitAll()
                         .requestMatchers("/api/claims/**").permitAll()
                         .requestMatchers("/api/pricing/**").permitAll()
+                        .requestMatchers("/api/tracking/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
