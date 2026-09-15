@@ -1,0 +1,77 @@
+﻿.request-page {
+  min-height: calc(100vh - 82px);
+  padding: 100px 7%;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 80% 20%, rgba(201,169,110,.12), transparent 35%),
+    #11100e;
+}
+
+.request-box {
+  width: min(700px, 100%);
+  padding: 55px;
+  border: 1px solid #38342d;
+  background: #171512;
+}
+
+.request-box h1 {
+  margin-top: 18px;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(48px, 7vw, 76px);
+  line-height: .95;
+}
+
+.request-box h1 span {
+  color: #c9a96e;
+}
+
+.request-box form {
+  display: grid;
+  gap: 15px;
+  margin-top: 40px;
+}
+
+.request-box input,
+.request-box textarea {
+  width: 100%;
+  padding: 18px;
+  border: 1px solid #38342d;
+  outline: none;
+  background: #11100e;
+  color: #f5f1e8;
+}
+
+.request-box textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.request-box input:focus,
+.request-box textarea:focus {
+  border-color: #c9a96e;
+}
+
+.request-box button {
+  margin-top: 10px;
+  padding: 18px;
+  border: none;
+  background: #c9a96e;
+  color: #11100e;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.request-box button:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .request-page {
+    padding: 60px 5%;
+  }
+
+  .request-box {
+    padding: 35px 25px;
+  }
+}

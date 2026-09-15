@@ -1,0 +1,127 @@
+﻿.requests-page {
+  min-height: calc(100vh - 82px);
+  padding: 100px 7%;
+  background: #11100e;
+  color: #f5f1e8;
+}
+
+.requests-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 30px;
+}
+
+.requests-header h1 {
+  margin-top: 15px;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(50px, 7vw, 85px);
+  line-height: .95;
+}
+
+.requests-header h1 span {
+  color: #c9a96e;
+}
+
+.requests-header > div > p:last-child {
+  margin-top: 20px;
+  color: #918d84;
+}
+
+.new-request {
+  padding: 16px 24px;
+  background: #c9a96e;
+  color: #11100e;
+  font-weight: 700;
+}
+
+.requests-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-top: 70px;
+}
+
+.request-card {
+  padding: 30px;
+  border: 1px solid #38342d;
+  background: #171512;
+  transition: .35s ease;
+}
+
+.request-card:hover {
+  transform: translateY(-8px);
+  border-color: #c9a96e;
+}
+
+.request-card-top {
+  display: flex;
+  justify-content: space-between;
+  color: #77736b;
+  font-size: 12px;
+}
+
+.request-card-top b {
+  color: #c9a96e;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.route {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 55px 0 35px;
+}
+
+.route small {
+  display: block;
+  margin-bottom: 8px;
+  color: #77736b;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+.route strong {
+  font-family: "Playfair Display", serif;
+  font-size: 25px;
+}
+
+.route-line {
+  color: #c9a96e;
+  font-size: 24px;
+}
+
+.request-meta {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0;
+  border-top: 1px solid #302d27;
+  border-bottom: 1px solid #302d27;
+  color: #77736b;
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.request-meta b {
+  color: #f5f1e8;
+}
+
+.request-action {
+  display: block;
+  margin-top: 22px;
+  color: #c9a96e;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .requests-header {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .requests-grid {
+    grid-template-columns: 1fr;
+  }
+}

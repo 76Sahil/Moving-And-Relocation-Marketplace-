@@ -1,0 +1,107 @@
+﻿.providers-section {
+  padding: 120px 7%;
+  background: #171512;
+}
+
+.providers-section h2 {
+  max-width: 850px;
+  margin-top: 18px;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(45px, 6vw, 80px);
+  line-height: 1;
+}
+
+.providers-section h2 span {
+  color: #c9a96e;
+}
+
+.provider-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 65px;
+}
+
+.provider-card {
+  padding: 32px;
+  min-height: 310px;
+  border: 1px solid #38342d;
+  background: #11100e;
+  transition: .35s ease;
+}
+
+.provider-card:hover {
+  transform: translateY(-8px);
+  border-color: #c9a96e;
+}
+
+.provider-top,
+.provider-info,
+.provider-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.provider-icon {
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #c9a96e;
+  color: #11100e;
+  font-weight: 800;
+}
+
+.provider-top span {
+  color: #c9a96e;
+  font-size: 9px;
+  letter-spacing: 2px;
+}
+
+.provider-card h3 {
+  margin-top: 45px;
+  font-family: "Playfair Display", serif;
+  font-size: 29px;
+}
+
+.provider-card > p {
+  margin-top: 8px;
+  color: #77736b;
+}
+
+.provider-info {
+  margin-top: 35px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #302d27;
+}
+
+.provider-info strong {
+  color: #c9a96e;
+}
+
+.provider-info span {
+  color: #77736b;
+  font-size: 12px;
+}
+
+.provider-bottom {
+  margin-top: 22px;
+}
+
+.provider-bottom strong {
+  font-size: 14px;
+}
+
+.provider-bottom a {
+  color: #c9a96e;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .provider-grid {
+    grid-template-columns: 1fr;
+  }
+}
