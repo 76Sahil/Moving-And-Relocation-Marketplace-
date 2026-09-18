@@ -28,6 +28,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/inventory/**").permitAll()
                         .requestMatchers("/api/claims/**").permitAll()
                         .requestMatchers("/api/pricing/**").permitAll()
+                        .requestMatchers("/api/quotations/**").permitAll()
+                        .requestMatchers("/api/bookings/**").permitAll()
                         .requestMatchers("/api/tracking/**").permitAll()
                         .requestMatchers("/api/payments/**").permitAll()
                         .anyRequest().authenticated()
