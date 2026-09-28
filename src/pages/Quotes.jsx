@@ -1,13 +1,16 @@
-﻿import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../styles/Quotes.css";
 
 const quotes = [
-  { provider: "Elite Movers", rating: "4.9", price: "₹7,800", time: "1–2 Days", badge: "BEST VALUE", id: "elite-movers" },
-  { provider: "UrbanShift Logistics", rating: "4.8", price: "₹8,500", time: "1–2 Days", badge: "FASTEST", id: "urbanshift" },
-  { provider: "MoveCraft", rating: "4.9", price: "₹9,200", time: "2 Days", badge: "PREMIUM", id: "movecraft" }
+  { provider: "Elite Movers", rating: "4.9", price: "?7,800", time: "1�2 Days", badge: "BEST VALUE", id: "elite-movers" },
+  { provider: "UrbanShift Logistics", rating: "4.8", price: "?8,500", time: "1�2 Days", badge: "FASTEST", id: "urbanshift" },
+  { provider: "MoveCraft", rating: "4.9", price: "?9,200", time: "2 Days", badge: "PREMIUM", id: "movecraft" }
 ];
 
 export default function Quotes() {
+  const { state } = useLocation();
+  const request = state?.movingRequest;
+
   return (
     <main className="quotes-page">
       <div className="quotes-header">
@@ -16,15 +19,17 @@ export default function Quotes() {
           <h1>Choose your <span>move.</span></h1>
           <p>Compare verified providers and select the right option.</p>
         </div>
-        <Link to="/create-request" className="quotes-back">← Edit Request</Link>
+        <Link to="/create-request" className="quotes-back">? Edit Request</Link>
       </div>
 
-      <div className="quote-route">
-        <span>PUNE</span>
-        <strong>→</strong>
-        <span>MUMBAI</span>
-        <small>28 SEP 2026</small>
-      </div>
+      {request && (
+        <div className="quote-route">
+          <span>{request.origin.toUpperCase()}</span>
+          <strong>?</strong>
+          <span>{request.destination.toUpperCase()}</span>
+          <small>{request.movingDate}</small>
+        </div>
+      )}
 
       <section className="quotes-grid">
         {quotes.map((quote) => (
@@ -38,7 +43,7 @@ export default function Quotes() {
             <p>Verified professional moving partner</p>
 
             <div className="quote-rating">
-              <strong>★ {quote.rating}</strong>
+              <strong>? {quote.rating}</strong>
               <span>Verified reviews</span>
             </div>
 
@@ -48,7 +53,7 @@ export default function Quotes() {
             </div>
 
             <Link to={`/provider/${quote.id}`} className="quote-button">
-              View Provider →
+              View Provider ?
             </Link>
           </article>
         ))}
