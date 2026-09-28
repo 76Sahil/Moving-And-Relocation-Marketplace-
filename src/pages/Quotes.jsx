@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import api from "../services/api";
+import { createBooking } from "../services/api";
 import "../styles/Quotes.css";
 
 export default function Quotes() {
@@ -8,8 +9,11 @@ export default function Quotes() {
   const request = state?.movingRequest;
 
   const [pricing, setPricing] = useState(null);
+  const [quotation, setQuotation] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [bookingLoading, setBookingLoading] = useState(false);
   const [error, setError] = useState("");
+  const [bookingMessage, setBookingMessage] = useState("");
 
   useEffect(() => {
     if (!request?.id) {
@@ -17,19 +21,52 @@ export default function Quotes() {
       return;
     }
 
-    api.get("/pricing")
-      .then(({ data }) => {
-        const result = data.find(
-          (item) => item.movingRequest?.id === request.id ||
-                    item.movingRequestId === request.id
+    Promise.all([
+      api.get("/pricing"),
+      api.get("/quotations"),
+    ])
+      .then(([pricingResponse, quotationResponse]) => {
+        const pricingResult = pricingResponse.data.find(
+          (item) =>
+            item.movingRequest?.id === request.id ||
+            item.movingRequestId === request.id
         );
-        setPricing(result || null);
+
+        const quotationResult = quotationResponse.data.find(
+          (item) => item.movingRequestId === request.id
+        );
+
+        setPricing(pricingResult || null);
+        setQuotation(quotationResult || null);
       })
       .catch((err) => {
-        setError(err.response?.data?.message || "Unable to load pricing.");
+        setError(err.response?.data?.message || "Unable to load quote details.");
       })
       .finally(() => setLoading(false));
   }, [request?.id]);
+
+  const handleBooking = async () => {
+    if (!request?.id || !quotation?.id) return;
+
+    setBookingLoading(true);
+    setBookingMessage("");
+    setError("");
+
+    try {
+      await createBooking({
+        movingRequestId: request.id,
+        quotationId: quotation.id,
+        bookingDate: request.movingDate,
+        status: "PENDING",
+      });
+
+      setBookingMessage("Booking request created successfully.");
+    } catch (err) {
+      setError(err.response?.data?.message || "Unable to create booking.");
+    } finally {
+      setBookingLoading(false);
+    }
+  };
 
   return (
     <main className="quotes-page">
@@ -51,14 +88,15 @@ export default function Quotes() {
         </div>
       )}
 
-      {loading && <p>Loading pricing...</p>}
+      {loading && <p>Loading quote details...</p>}
       {error && <p>{error}</p>}
+      {bookingMessage && <p>{bookingMessage}</p>}
 
-      {!loading && !error && !pricing && (
-        <p>No pricing has been generated for this request yet.</p>
+      {!loading && !error && !pricing && !quotation && (
+        <p>No quote has been generated for this request yet.</p>
       )}
 
-      {pricing && (
+      {(pricing || quotation) && (
         <section className="quotes-grid">
           <article className="quote-card">
             <div className="quote-top">
@@ -69,23 +107,37 @@ export default function Quotes() {
             <h2>Moving estimate</h2>
             <p>Pricing for moving request #{request.id}</p>
 
-            <div className="quote-details">
-              <div>
-                <small>BASE PRICE</small>
-                <b>₹{pricing.basePrice}</b>
-              </div>
-              <div>
-                <small>ADDITIONAL CHARGES</small>
-                <b>₹{pricing.additionalCharges}</b>
-              </div>
-            </div>
+            {pricing && (
+              <>
+                <div className="quote-details">
+                  <div>
+                    <small>BASE PRICE</small>
+                    <b>₹{pricing.basePrice}</b>
+                  </div>
+                  <div>
+                    <small>ADDITIONAL CHARGES</small>
+                    <b>₹{pricing.additionalCharges}</b>
+                  </div>
+                </div>
 
-            <div className="quote-details">
-              <div>
-                <small>TOTAL PRICE</small>
-                <b>₹{pricing.totalPrice}</b>
-              </div>
-            </div>
+                <div className="quote-details">
+                  <div>
+                    <small>TOTAL PRICE</small>
+                    <b>₹{pricing.totalPrice}</b>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {quotation && (
+              <button
+                type="button"
+                onClick={handleBooking}
+                disabled={bookingLoading}
+              >
+                {bookingLoading ? "Booking..." : "Book This Move →"}
+              </button>
+            )}
           </article>
         </section>
       )}
