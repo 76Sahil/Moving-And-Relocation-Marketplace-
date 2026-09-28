@@ -63,3 +63,14 @@ export async function deleteMovingRequest(id) {
 
   return true;
 }
+
+
+export async function getQuotations() {
+  const response = await fetch(`${API_BASE_URL}/quotations`);
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch quotations");
+  }
+
+  return response.json();
+}
