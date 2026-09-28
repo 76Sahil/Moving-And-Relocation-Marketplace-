@@ -21,3 +21,10 @@ export const getSchedules = async () => (await api.get("/schedules")).data;
 export const getTracking = async () => (await api.get("/tracking")).data;
 
 export default api;
+
+export const registerUser = async (data) =>
+  (await api.post("/auth/register", data)).data;
+
+export const loginUser = async (username, password) =>
+  (await api.post("/auth/login", null, { params: { username, password } })).data;
+
