@@ -1,26 +1,32 @@
 ﻿import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { getQuotations } from "../services/api";
+import api from "../services/api";
 import "../styles/Quotes.css";
 
 export default function Quotes() {
   const { state } = useLocation();
   const request = state?.movingRequest;
 
-  const [quotes, setQuotes] = useState([]);
+  const [pricing, setPricing] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    getQuotations()
-      .then((data) => {
-        const filtered = request?.id
-          ? data.filter((quote) => quote.movingRequestId === request.id)
-          : data;
-        setQuotes(filtered);
+    if (!request?.id) {
+      setLoading(false);
+      return;
+    }
+
+    api.get("/pricing")
+      .then(({ data }) => {
+        const result = data.find(
+          (item) => item.movingRequest?.id === request.id ||
+                    item.movingRequestId === request.id
+        );
+        setPricing(result || null);
       })
       .catch((err) => {
-        setError(err.response?.data?.message || "Unable to load quotations.");
+        setError(err.response?.data?.message || "Unable to load pricing.");
       })
       .finally(() => setLoading(false));
   }, [request?.id]);
@@ -29,9 +35,9 @@ export default function Quotes() {
     <main className="quotes-page">
       <div className="quotes-header">
         <div>
-          <p className="section-label">YOUR QUOTES</p>
-          <h1>Choose your <span>move.</span></h1>
-          <p>Compare quotations for your moving request.</p>
+          <p className="section-label">MOVE PRICING</p>
+          <h1>Your <span>estimate.</span></h1>
+          <p>Review the pricing for your moving request.</p>
         </div>
         <Link to="/create-request" className="quotes-back">← Edit Request</Link>
       </div>
@@ -45,37 +51,44 @@ export default function Quotes() {
         </div>
       )}
 
-      {loading && <p>Loading quotations...</p>}
+      {loading && <p>Loading pricing...</p>}
       {error && <p>{error}</p>}
 
-      {!loading && !error && quotes.length === 0 && (
-        <p>No quotations available for this request yet.</p>
+      {!loading && !error && !pricing && (
+        <p>No pricing has been generated for this request yet.</p>
       )}
 
-      <section className="quotes-grid">
-        {quotes.map((quote) => (
-          <article className="quote-card" key={quote.id}>
+      {pricing && (
+        <section className="quotes-grid">
+          <article className="quote-card">
             <div className="quote-top">
               <div className="quote-avatar">₹</div>
-              <span>{quote.status}</span>
+              <span>ESTIMATE</span>
             </div>
 
-            <h2>Quotation #{quote.id}</h2>
-            <p>Moving request #{quote.movingRequestId}</p>
+            <h2>Moving estimate</h2>
+            <p>Pricing for moving request #{request.id}</p>
 
             <div className="quote-details">
               <div>
-                <small>STATUS</small>
-                <b>{quote.status}</b>
+                <small>BASE PRICE</small>
+                <b>₹{pricing.basePrice}</b>
               </div>
               <div>
-                <small>QUOTED AMOUNT</small>
-                <b>₹{quote.amount}</b>
+                <small>ADDITIONAL CHARGES</small>
+                <b>₹{pricing.additionalCharges}</b>
+              </div>
+            </div>
+
+            <div className="quote-details">
+              <div>
+                <small>TOTAL PRICE</small>
+                <b>₹{pricing.totalPrice}</b>
               </div>
             </div>
           </article>
-        ))}
-      </section>
+        </section>
+      )}
     </main>
   );
 }
