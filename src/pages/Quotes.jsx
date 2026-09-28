@@ -2,8 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 import "../styles/Quotes.css";
 
 const quotes = [
-  { provider: "Elite Movers", rating: "4.9", price: "?7,800", time: "1–2 Days", badge: "BEST VALUE", id: "elite-movers" },
-  { provider: "UrbanShift Logistics", rating: "4.8", price: "?8,500", time: "1–2 Days", badge: "FASTEST", id: "urbanshift" },
+  { provider: "Elite Movers", rating: "4.9", price: "?7,800", time: "1â€“2 Days", badge: "BEST VALUE", id: "elite-movers" },
+  { provider: "UrbanShift Logistics", rating: "4.8", price: "?8,500", time: "1â€“2 Days", badge: "FASTEST", id: "urbanshift" },
   { provider: "MoveCraft", rating: "4.9", price: "?9,200", time: "2 Days", badge: "PREMIUM", id: "movecraft" }
 ];
 
